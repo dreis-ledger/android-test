@@ -1,9 +1,11 @@
 import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
-import LedgerLiveApi, { Account } from "@ledgerhq/live-app-sdk";
+import LedgerLiveApi, {
+  Account,
+  WindowMessageTransport,
+} from "@ledgerhq/live-app-sdk";
 
 import styles from "../styles/Home.module.css";
-import { WindowMessageProxyTransport } from "../shared/proxy";
 
 export default function Home() {
   const api = useRef<LedgerLiveApi | null>(null);
@@ -19,7 +21,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    api.current = new LedgerLiveApi(new WindowMessageProxyTransport(iframeRef));
+    api.current = new LedgerLiveApi(new WindowMessageTransport());
 
     api.current.connect();
     connected.current = true;
