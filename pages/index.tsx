@@ -45,8 +45,8 @@ export default function Home() {
       <main className={styles.main}>
         <h1 className={styles.title}>Accounts</h1>
 
+        <button onClick={handleClick}>List Accounts</button>
         <div className={styles.card}>
-          <button onClick={handleClick}>List Accounts</button>
           <pre>{JSON.stringify(accounts, null, 2)}</pre>
         </div>
       </main>
