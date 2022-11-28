@@ -95,7 +95,6 @@ export class WindowMessageProxyTransport implements Transport {
         console.log("sending message", response);
         this.target.top?.postMessage(JSON.stringify(response), "*");
       }
-      console.log("UPSSS!! FALLBACK");
       return Promise.resolve();
     } catch (error) {
       console.error("unexpected error on send", error);

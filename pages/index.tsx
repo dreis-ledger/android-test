@@ -21,6 +21,19 @@ export default function Home() {
     }
   }
 
+  const handleAccountNativeFlow = async (
+    currenciesIds?: string[]
+  ): Promise<Account | undefined> => {
+    try {
+      return await api.current!.requestAccount({
+        includeTokens: true,
+        currencies: currenciesIds,
+      });
+    } catch (error) {
+      console.error("Error ==> ", error);
+    }
+  };
+
   useEffect(() => {
     api.current = new LedgerLiveApi(new WindowMessageProxyTransport(iframeRef));
 
@@ -49,6 +62,14 @@ export default function Home() {
         <h1 className={styles.title}>Accounts</h1>
 
         <button onClick={handleClick}>List Accounts</button>
+        <button
+          onClick={async () => {
+            const data = await handleAccountNativeFlow();
+            console.log("DRAWER DATA", data);
+          }}
+        >
+          Open Drawer
+        </button>
 
         {hasData && (
           <div className={styles.card}>
