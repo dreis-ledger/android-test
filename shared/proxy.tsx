@@ -37,6 +37,7 @@ export class WindowMessageProxyTransport implements Transport {
   };
 
   _onMessageEvent = (event: MessageEvent): void => {
+    console.log("_onMessageEvent called");
     if (this._onMessage) {
       console.log("received message event", event);
       if (
@@ -46,13 +47,14 @@ export class WindowMessageProxyTransport implements Transport {
       ) {
         try {
           const payload = JSON.parse(event.data.toString());
-
+          console.log("PAYLOAD", payload);
           if (payload.jsonrpc) {
             console.log("received message", payload);
             if (payload.method) {
               this.send(payload);
             } else {
               this._onMessage(payload);
+              console.log("PAYLOAD ELSE", this.iframe.current);
               this.iframe.current?.contentWindow?.postMessage(
                 JSON.stringify(payload),
                 "*"
@@ -93,6 +95,7 @@ export class WindowMessageProxyTransport implements Transport {
         console.log("sending message", response);
         this.target.top?.postMessage(JSON.stringify(response), "*");
       }
+      console.log("UPSSS!! FALLBACK");
       return Promise.resolve();
     } catch (error) {
       console.error("unexpected error on send", error);
