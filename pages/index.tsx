@@ -11,11 +11,14 @@ export default function Home() {
   const api = useRef<LedgerLiveApi | null>(null);
   const iframeRef = useRef(null);
   const connected = useRef(false);
+  const [hasData, setHasData] = useState(false);
   const [accounts, setAccounts] = useState<Account[]>([]);
 
   async function handleClick() {
+    setHasData(false);
     if (connected.current && api.current) {
       const data = await api.current.listAccounts();
+      setHasData(true);
       setAccounts(data);
     }
   }
@@ -48,9 +51,12 @@ export default function Home() {
         <h1 className={styles.title}>Accounts</h1>
 
         <button onClick={handleClick}>List Accounts</button>
-        <div className={styles.card}>
-          <pre>{JSON.stringify(accounts, null, 2)}</pre>
-        </div>
+
+        {hasData && (
+          <div className={styles.card}>
+            <p>{accounts.length} accounts found</p>
+          </div>
+        )}
       </main>
     </div>
   );
