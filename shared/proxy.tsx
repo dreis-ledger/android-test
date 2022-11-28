@@ -76,10 +76,12 @@ export class WindowMessageProxyTransport implements Transport {
   };
 
   set onMessage(handler: MessageHandler | undefined) {
+    console.log("set onMessage() called");
     this._onMessage = handler;
   }
 
   get onMessage(): MessageHandler | undefined {
+    console.log("get onMessage() called");
     return this._onMessage;
   }
 
