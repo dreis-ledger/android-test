@@ -116,11 +116,9 @@ export default function Home() {
           isElectron ?
         </button>
 
-        {isElectron && (
-          <div className={styles.card}>
-            <p>Is Electron</p>
-          </div>
-        )}
+        <div className={styles.card}>
+          <p>{isElectron ? "Is Electron" : "Is NOT Electron"}</p>
+        </div>
 
         {hasData && (
           <div className={styles.card}>
