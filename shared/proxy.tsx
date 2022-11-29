@@ -28,11 +28,23 @@ export class WindowMessageProxyTransport implements Transport {
 
   connect = (): void => {
     this.target.addEventListener("message", this._onMessageEvent, false);
+    // @ts-ignore
+    this.target.document?.addEventListener(
+      "message",
+      this._onMessageEvent,
+      false
+    );
     console.debug("event listeners registered");
   };
 
   disconnect = (): void => {
-    this.target.removeEventListener("message", this._onMessageEvent, false);
+    this.target.removeEventListener("message", this._onMessageEvent);
+    // @ts-ignore
+    this.target.document?.removeEventListener(
+      "message",
+      this._onMessageEvent,
+      false
+    );
     console.debug("event listeners unregistered");
   };
 
@@ -54,7 +66,6 @@ export class WindowMessageProxyTransport implements Transport {
               this.send(payload);
             } else {
               this._onMessage(payload);
-              console.log("PAYLOAD ELSE", this.iframe.current);
               this.iframe.current?.contentWindow?.postMessage(
                 JSON.stringify(payload),
                 "*"

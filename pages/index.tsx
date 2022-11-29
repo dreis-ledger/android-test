@@ -5,10 +5,19 @@ import LedgerLiveApi, { Account } from "@ledgerhq/live-app-sdk";
 import styles from "../styles/Home.module.css";
 import { WindowMessageProxyTransport } from "../shared/proxy";
 
+declare global {
+  interface Window {
+    process: {
+      type: string;
+    };
+  }
+}
+
 export default function Home() {
   const api = useRef<LedgerLiveApi | null>(null);
   const iframeRef = useRef(null);
   const connected = useRef(false);
+  const [isElectron, setIsElectron] = useState(false);
   const [hasData, setHasData] = useState(false);
   const [accounts, setAccounts] = useState<Account[]>([]);
 
@@ -32,6 +41,39 @@ export default function Home() {
     } catch (error) {
       console.error("Error ==> ", error);
     }
+  };
+
+  const checkIsElectron = () => {
+    // Renderer process
+
+    // @ts-ignore
+    if (
+      typeof window !== "undefined" &&
+      typeof window.process === "object" &&
+      window.process.type === "renderer"
+    ) {
+      return true;
+    }
+
+    // Main process
+    if (
+      typeof process !== "undefined" &&
+      typeof process.versions === "object" &&
+      !!process.versions.electron
+    ) {
+      return true;
+    }
+
+    // Detect the user agent when the `nodeIntegration` option is set to true
+    if (
+      typeof navigator === "object" &&
+      typeof navigator.userAgent === "string" &&
+      navigator.userAgent.indexOf("Electron") >= 0
+    ) {
+      return true;
+    }
+
+    return false;
   };
 
   useEffect(() => {
@@ -70,6 +112,15 @@ export default function Home() {
         >
           Open Drawer
         </button>
+        <button onClick={() => setIsElectron(checkIsElectron())}>
+          isElectron ?
+        </button>
+
+        {isElectron && (
+          <div className={styles.card}>
+            <p>Is Electron</p>
+          </div>
+        )}
 
         {hasData && (
           <div className={styles.card}>
